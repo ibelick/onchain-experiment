@@ -13,7 +13,7 @@ contract CollectibleOnChain is ERC721URIStorage, Ownable {
     uint256 internal _price; // = 0.002 ether;
     /// @dev Reserved collectible
     uint256 internal _reserved; // = 200;
-
+    /// @dev
     address payable beneficiary;
 
     uint256 public MAX_SUPPLY; // = 10000;
@@ -51,7 +51,17 @@ contract CollectibleOnChain is ERC721URIStorage, Ownable {
     // ============ OWNER INTERFACE ============
 
     function setPublicMintActive() external onlyOwner publicMintIsNotActive {
+        require(beneficiary != address(0), "Beneficiary not set");
+
         publicMintActive = true;
+    }
+
+    function setBeneficiary(address payable _beneficiary)
+        public
+        virtual
+        onlyOwner
+    {
+        beneficiary = _beneficiary;
     }
 
     // ============ PUBLIC VIEW FUNCTIONS ============
