@@ -64,6 +64,14 @@ contract CollectibleOnChain is ERC721URIStorage, Ownable {
         beneficiary = _beneficiary;
     }
 
+    function withdraw() public virtual onlyOwner {
+        require(beneficiary != address(0), "Beneficiary not set");
+
+        uint256 _balance = address(this).balance;
+
+        require(payable(beneficiary).send(_balance));
+    }
+
     // ============ PUBLIC VIEW FUNCTIONS ============
 
     /// @notice Get the current price of one Collectible

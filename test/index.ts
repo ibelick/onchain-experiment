@@ -1,9 +1,14 @@
-import { ethers } from "hardhat";
-import { Contract } from "ethers";
+import { ethers, waffle } from "hardhat";
+import { Contract, BigNumber } from "ethers";
 import assert from "assert";
 
 const { expect } = require("chai");
 
+const parseEther = (amount: string) => {
+  return BigNumber.from(ethers.utils.parseEther(amount));
+};
+
+const MINT_FEE = parseEther("0.003");
 const ether = 1e18;
 
 describe("CollectibleOnChain", () => {
@@ -16,7 +21,7 @@ describe("CollectibleOnChain", () => {
       "CollectibleOnChain"
     );
     [owner, beneficiary] = await ethers.getSigners();
-    nftContract = await nftContractFactory.deploy(1e18 * 0.003, 200);
+    nftContract = await nftContractFactory.deploy(MINT_FEE, 200);
     await nftContract.deployed();
     assert(nftContract.address);
   });
@@ -71,11 +76,39 @@ describe("CollectibleOnChain", () => {
   });
 
   it("should mint a collectibe", async () => {
+    const unitPrice = await nftContract.getUnitPrice();
     await nftContract.setBeneficiary(beneficiary.address, {
       from: owner.address,
     });
-    expect(await nftContract.publicMintActive()).to.equal(false);
     await nftContract.setPublicMintActive();
-    expect(await nftContract.publicMintActive()).to.equal(true);
+    const txn = await nftContract.mint("ibelick", { value: unitPrice });
+    await txn.wait();
+    assert.ok(txn);
+  });
+
+  it("should withdraw", async () => {
+    const beneficiaryBalanceBefore = await waffle.provider.getBalance(
+      beneficiary.address
+    );
+    expect(beneficiaryBalanceBefore).to.equal(parseEther("10000"));
+
+    const unitPrice = await nftContract.getUnitPrice();
+    await nftContract.setBeneficiary(beneficiary.address, {
+      from: owner.address,
+    });
+    await nftContract.setPublicMintActive();
+    let txn = await nftContract.mint("ibelick", { value: unitPrice });
+    await txn.wait();
+    txn = await nftContract.mint("ibelick", { value: unitPrice });
+    await txn.wait();
+    await nftContract.withdraw();
+    const beneficiaryBalanceAfter = await waffle.provider.getBalance(
+      beneficiary.address
+    );
+    const expectedBeneficiaryBalanceAfter = MINT_FEE.mul(2).add(
+      beneficiaryBalanceBefore
+    );
+
+    expect(beneficiaryBalanceAfter).to.equal(expectedBeneficiaryBalanceAfter);
   });
 });
