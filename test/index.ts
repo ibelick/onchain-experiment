@@ -20,8 +20,15 @@ describe("CollectibleOnChain", () => {
     const nftContractFactory = await ethers.getContractFactory(
       "CollectibleOnChain"
     );
+    const nftGenerator = await (
+      await ethers.getContractFactory("CollectibleGenerator")
+    ).deploy();
     [owner, beneficiary] = await ethers.getSigners();
-    nftContract = await nftContractFactory.deploy(MINT_FEE, 200);
+    nftContract = await nftContractFactory.deploy(
+      nftGenerator.address,
+      MINT_FEE,
+      200
+    );
     await nftContract.deployed();
     assert(nftContract.address);
   });

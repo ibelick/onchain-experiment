@@ -6,17 +6,14 @@ import "@openzeppelin/contracts/utils/Base64.sol";
 import "hardhat/console.sol";
 
 library CollectibleGenerator {
-    function test() public pure returns (string memory) {
-        return "hello";
-    }
-
     function tokenURI(string calldata name)
-        internal
+        external
         pure
         returns (string memory)
     {
         string
-            memory svg = "<svg width='120' height='240' version='1.1' xmlns='http://www.w3.org/2000/svg'><defs><linearGradient id='Gradient1' x1='0' x2='0' y1='0' y2='1'><stop offset='0%' stop-color='red'/><stop offset='50%' stop-color='black' stop-opacity='0'/><stop offset='100%' stop-color='blue'/></linearGradient><linearGradient id='Gradient2'><stop class='stop1' offset='0%'/><stop class='stop2' offset='50%'/><stop class='stop3' offset='100%'/></linearGradient><style type='text/css'><![CDATA[#rect1 { fill: url(#Gradient2); }.stop1 { stop-color: red; }.stop2 { stop-color: black; stop-opacity: 0; }.stop3 { stop-color: blue; }]]></style></defs><rect x='0' y='0' rx='0' ry='0' width='100%' height='100%' fill='url(#Gradient1)'/></svg>";
+            memory svg = "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='299px' height='289px' viewBox='0 0 299 289' enable-background='new 0 0 299 289' xml:space='preserve'><path fill='url(#skyGradient)' d='M293.468,275.282c0,1.617-1.311,2.928-2.928,2.928H8.46c-1.617,0-2.928-1.311-2.928-2.928V13.718c0-1.617,1.311-2.928,2.928-2.928h282.08c1.617,0,2.928,1.311,2.928,2.928V275.282z'></path><defs><linearGradient id='skyGradient' x1='100%' y1='100%'><stop offset='0%' stop-color='lightblue' stop-opacity='.5'><animate attributeName='stop-color' values='lightblue;blue;red;red;black;red;red;purple;lightblue' dur='14s' repeatCount='indefinite'></animate></stop><stop offset='100%' stop-color='lightblue' stop-opacity='.5'><animate attributeName='stop-color' values='lightblue;orange;purple;purple;black;purple;purple;blue;lightblue' dur='14s' repeatCount='indefinite'></animate><animate attributeName='offset' values='.95;.80;.60;.40;.20;0;.20;.40;.60;.80;.95' dur='14s' repeatCount='indefinite'></animate></stop></linearGradient></defs></svg>";
+
         string memory finalSvg = Base64.encode(bytes(svg));
         string memory json = Base64.encode(
             bytes(
