@@ -26,15 +26,17 @@ const config: HardhatUserConfig = {
   solidity: "0.8.4",
   networks: {
     rinkeby: {
-      url: process.env.ROPSTEN_URL || "",
+      url: process.env.RINKEBY_URL || "",
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      // gas: 2100000,
+      // gasPrice: 8000000000,
     },
   },
-  gasReporter: {
-    enabled: process.env.REPORT_GAS !== undefined,
-    currency: "USD",
-  },
+  // gasReporter: {
+  //   enabled: process.env.REPORT_GAS !== undefined,
+  //   currency: "USD",
+  // },
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY,
   },

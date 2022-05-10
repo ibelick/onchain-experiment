@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
@@ -14,7 +14,7 @@ contract CollectibleOnChain is ERC721URIStorage, Ownable {
     uint256 internal _price; // = 0.002 ether;
     /// @dev Reserved collectible
     uint256 internal _reserved; // = 200;
-    /// @dev The beneficiary of the contract
+    /// @dev Address for withdrawing money, separate from owner
     address payable beneficiary;
 
     uint256 public MAX_SUPPLY; // = 10000;
@@ -98,7 +98,7 @@ contract CollectibleOnChain is ERC721URIStorage, Ownable {
         virtual
         publicMintIsActive
     {
-        require(msg.value <= _price, "Ether sent is not correct");
+        require(msg.value == _price, "Ether sent is not correct");
         require(bytes(name).length > 0, "Empty string.");
         require(bytes(name).length < 17, "Name too long.");
         uint256 newItemId = _tokenIds.current();
