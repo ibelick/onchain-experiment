@@ -17,8 +17,7 @@ contract CollectibleOnChain is ERC721URIStorage, Ownable {
     /// @dev Address for withdrawing money, separate from owner
     address payable beneficiary;
 
-    uint256 public MAX_SUPPLY; // = 10000;
-    uint256 public MAX_TOKENS_PER_MINT; // = 20;
+    uint256 public MAX_SUPPLY;
     bool public publicMintActive = false;
     bool private _saleStarted;
 
@@ -99,6 +98,7 @@ contract CollectibleOnChain is ERC721URIStorage, Ownable {
         publicMintIsActive
     {
         require(msg.value == _price, "Ether sent is not correct");
+        require(_tokenIds.current() < MAX_SUPPLY, "Max supply exceeded");
         require(bytes(name).length > 0, "Empty string.");
         require(bytes(name).length < 17, "Name too long.");
         uint256 newItemId = _tokenIds.current();

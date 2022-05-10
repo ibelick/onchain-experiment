@@ -27,7 +27,7 @@ describe("CollectibleOnChain", () => {
     nftContract = await nftContractFactory.deploy(
       nftGenerator.address,
       MINT_FEE,
-      200
+      10
     );
     await nftContract.deployed();
     assert(nftContract.address);
